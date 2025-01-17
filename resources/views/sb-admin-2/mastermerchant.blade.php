@@ -29,9 +29,7 @@
     <div class="card-header py-3">
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-gray-800">Data Master Merchant</h1>
-        <p class="mb-4" style="color:black">
-            loremipsum loremipsum loremipsum loremipsum loremipsum loremipsum
-        </p>
+
         @if(isset($error))
         <div align="center">
             <text style="color:red">{{ $error }}</text>

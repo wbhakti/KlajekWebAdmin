@@ -37,7 +37,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('dashboard') }}">
-                <div class="sidebar-brand-text mx-2">Food Dashboard<sup></sup></div>
+                <div class="sidebar-brand-text mx-2">KLAJEK Dashboard<sup></sup></div>
             </a>
 
             <!-- Divider -->

@@ -9,7 +9,7 @@ li {
 }
 </style>
 <div class="jumbotron">
-    <h1 style="color:black">Dashboard Food Admin</h1>
+    <h1 style="color:black">Dashboard Admin KLAJEK</h1>
 </div>
 
 <!-- Content Row -->
