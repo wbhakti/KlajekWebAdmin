@@ -203,7 +203,7 @@
 $(document).ready(function() {
     $('#dataTable').dataTable({
         "lengthMenu": [10, 20, 50, 100],
-        "pageLength": 5,
+        "pageLength": 100,
         searching: true
     });
 });

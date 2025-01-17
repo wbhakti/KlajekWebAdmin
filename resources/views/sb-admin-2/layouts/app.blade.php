@@ -64,6 +64,12 @@
                     <span>Merchant</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('dashboard/mastertransaksi') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Transaksi</span>
+                </a>
+            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
