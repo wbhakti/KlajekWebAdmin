@@ -18,7 +18,7 @@ class TransactionController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->post('https://dev.klajek.com/api/orders/result', [
+            $responseTransaksi = $client->post(env('API_BASE_URL') .'/orders/result', [
                 'headers' => [
                     'API_KEY' => session()->get('token'),
                 ],
@@ -49,7 +49,7 @@ class TransactionController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->post('https://dev.klajek.com/api/orders/merchant/'.$request->input('merchant_id'), [
+            $responseTransaksi = $client->post(env('API_BASE_URL') .'/orders/merchant/'.$request->input('merchant_id'), [
                 'headers' => [
                     'API_KEY' => session()->get('token'),
                 ],
@@ -87,7 +87,7 @@ class TransactionController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->request('GET', 'https://dev.klajek.com/api/orders');
+            $responseTransaksi = $client->request('GET', env('API_BASE_URL') .'/api/orders');
             $dataTransaksi = json_decode($responseTransaksi->getBody()->getContents(), true);
             
             return view('sb-admin-2/mastertransaksi', [
@@ -109,7 +109,7 @@ class TransactionController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->request('GET', 'https://dev.klajek.com/api/order/details/'.$request->input('id'));
+            $responseTransaksi = $client->request('GET', env('API_BASE_URL') .'/api/order/details/'.$request->input('id'));
             $dataTransaksi = json_decode($responseTransaksi->getBody()->getContents(), true);
             
             return view('sb-admin-2/detailtransaksi', [
