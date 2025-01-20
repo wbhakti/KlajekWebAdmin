@@ -30,7 +30,7 @@ class AdminController extends Controller
         ]);
 
         $client = new Client();
-        $response = $client->post('https://dev.klajek.com/api/login', [
+        $response = $client->post(env('API_BASE_URL') . '/login', [
             'form_params' => [
                 'username' => $validated['username'],
                 'password' => $validated['password'],
@@ -69,7 +69,7 @@ class AdminController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseMerchant = $client->request('GET', 'https://dev.klajek.com/api/merchants');
+            $responseMerchant = $client->request('GET', env('API_BASE_URL') . '/merchants');
             $dataMerchant = json_decode($responseMerchant->getBody()->getContents(), true);
             
             return view('sb-admin-2/mastermerchant', [
@@ -92,7 +92,7 @@ class AdminController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->request('GET', 'https://dev.klajek.com/api/orders');
+            $responseTransaksi = $client->request('GET', env('API_BASE_URL') . '/orders');
             $dataTransaksi = json_decode($responseTransaksi->getBody()->getContents(), true);
             
             return view('sb-admin-2/mastertransaksi', [
@@ -114,7 +114,7 @@ class AdminController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->request('GET', 'https://dev.klajek.com/api/order/details/'.$request->input('id'));
+            $responseTransaksi = $client->request('GET', env('API_BASE_URL') . '/order/details/'.$request->input('id'));
             $dataTransaksi = json_decode($responseTransaksi->getBody()->getContents(), true);
             
             return view('sb-admin-2/detailtransaksi', [
@@ -143,7 +143,7 @@ class AdminController extends Controller
                     $fileName = $file->getClientOriginalName();
                     
                     $client = new Client();
-                    $response = $client->post('https://dev.klajek.com/api/merchants', [
+                    $response = $client->post(env('API_BASE_URL') . '/merchants', [
                         'headers' => [
                             'API_KEY' => session()->get('token'),
                         ],
@@ -161,7 +161,7 @@ class AdminController extends Controller
 
                         $merchantID = $responseBody['merchant_id'];
                         //upload foto
-                        $response = $client->post('https://dev.klajek.com/api/merchant/upload', [
+                        $response = $client->post(env('API_BASE_URL') . '/merchant/upload', [
                             'headers' => [
                                 'API_KEY' => session()->get('token'),
                             ],
@@ -184,7 +184,7 @@ class AdminController extends Controller
                             $imageNameUpdate = $responseBody['data']['image_name'];
                             //update imagename
                             $client = new Client();
-                            $response = $client->put('https://dev.klajek.com/api/merchants/update/'. $merchantID, [
+                            $response = $client->put(env('API_BASE_URL') . '/merchants/update/'. $merchantID, [
                                 'headers' => [
                                     'API_KEY' => session()->get('token'),
                                 ],
@@ -208,7 +208,7 @@ class AdminController extends Controller
             else if($request->input('proses') == 'edit'){
 
                 $client = new Client();
-                $response = $client->put('https://dev.klajek.com/api/merchants/update/'. $request->merchant_id, [
+                $response = $client->put(env('API_BASE_URL') . '/merchants/update/'. $request->merchant_id, [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
@@ -225,7 +225,7 @@ class AdminController extends Controller
             else if($request->input('proses') == 'delete'){
                 
                 $client = new Client();
-                $response = $client->put('https://dev.klajek.com/api/merchants/delete/'.$request->merchant_id, [
+                $response = $client->put(env('API_BASE_URL') . '/merchants/delete/'.$request->merchant_id, [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
@@ -250,11 +250,11 @@ class AdminController extends Controller
             $client = new Client();
 
             //kategori
-            $responseKategori= $client->request('GET', 'https://dev.klajek.com/api/category/'.$request->input('id'));
+            $responseKategori= $client->request('GET', env('API_BASE_URL') . '/category/'.$request->input('id'));
             $dataKategori = json_decode($responseKategori->getBody()->getContents(), true);
 
             //menu
-            $responseMenu = $client->request('GET', 'https://dev.klajek.com/api/menus/'.$request->input('id'));
+            $responseMenu = $client->request('GET', env('API_BASE_URL') . '/menus/'.$request->input('id'));
             $dataMenu = json_decode($responseMenu->getBody()->getContents(), true);
             //dd($dataMenu);
             return view('sb-admin-2/mastermenu', [
@@ -289,7 +289,7 @@ class AdminController extends Controller
                     
                     //add merchant
                     $client = new Client();
-                    $response = $client->post('https://dev.klajek.com/api/menus', [
+                    $response = $client->post(env('API_BASE_URL') . '/menus', [
                         'headers' => [
                             'API_KEY' => session()->get('token'),
                         ],
@@ -307,7 +307,7 @@ class AdminController extends Controller
                     if($responseBody['message'] == 'Menu Di tambahkan'){
                         $menuID = $responseBody['menu_id'];
                         //upload foto
-                        $response = $client->post('https://dev.klajek.com/api/menu/upload', [
+                        $response = $client->post(env('API_BASE_URL') . '/menu/upload', [
                             'headers' => [
                                 'API_KEY' => session()->get('token'),
                             ],
@@ -330,7 +330,7 @@ class AdminController extends Controller
                             $imageNameUpdate = $responseBody['data']['image_name'];
                             //update imagename
                             $client = new Client();
-                            $response = $client->put('https://dev.klajek.com/api/menu/update/'. $menuID, [
+                            $response = $client->put(env('API_BASE_URL') . '/menu/update/'. $menuID, [
                                 'headers' => [
                                     'API_KEY' => session()->get('token'),
                                 ],
@@ -354,7 +354,7 @@ class AdminController extends Controller
             else if($request->input('proses') == 'edit'){
 
                 $client = new Client();
-                $response = $client->put('https://dev.klajek.com/api/menu/update/'.$request->menu_id, [
+                $response = $client->put(env('API_BASE_URL') . '/menu/update/'.$request->menu_id, [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
@@ -371,7 +371,7 @@ class AdminController extends Controller
             else if($request->input('proses') == 'delete'){
 
                 $client = new Client();
-                $response = $client->put('https://dev.klajek.com/api/menu/delete/'.$request->menu_id, [
+                $response = $client->put(env('API_BASE_URL') . '/menu/delete/'.$request->menu_id, [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
@@ -399,7 +399,7 @@ class AdminController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseKategori= $client->request('GET', 'https://dev.klajek.com/api/category/'.$request->input('id'));
+            $responseKategori= $client->request('GET', env('API_BASE_URL') . '/category/'.$request->input('id'));
             $dataKategori = json_decode($responseKategori->getBody()->getContents(), true);
            //dd($dataKategori);
             return view('sb-admin-2/masterkategori', [
@@ -426,7 +426,7 @@ class AdminController extends Controller
             //dd($request);
             if($request->input('proses') == 'save'){
                 $client = new Client();
-                $response = $client->post('https://dev.klajek.com/api/category', [
+                $response = $client->post(env('API_BASE_URL') . '/category', [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
@@ -441,7 +441,7 @@ class AdminController extends Controller
             }
             else if($request->input('proses') == 'edit'){
                 $client = new Client();
-                $response = $client->put('https://dev.klajek.com/api/category/update/'.$request->kategori_id, [
+                $response = $client->put(env('API_BASE_URL') . '/category/update/'.$request->kategori_id, [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
@@ -456,7 +456,7 @@ class AdminController extends Controller
             }
             else if($request->input('proses') == 'delete'){
                 $client = new Client();
-                $response = $client->put('https://dev.klajek.com/api/category/delete/'.$request->kategori_id, [
+                $response = $client->put(env('API_BASE_URL') . '/category/delete/'.$request->kategori_id, [
                     'headers' => [
                         'API_KEY' => session()->get('token'),
                     ],
