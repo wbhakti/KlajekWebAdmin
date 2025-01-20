@@ -207,20 +207,67 @@ class AdminController extends Controller
             }
             else if($request->input('proses') == 'edit'){
 
-                $client = new Client();
-                $response = $client->put(env('API_BASE_URL') . '/merchants/update/'. $request->merchant_id, [
-                    'headers' => [
-                        'API_KEY' => session()->get('token'),
-                    ],
-                    'form_params' => [
-                        'nama' => $request->nama,
-                        'deskripsi' => $request->deskripsi,
-                        'latitude' => $request->latitude,
-                        'longitude' => $request->longitude,
-                    ],
-                ]);
-                $responseBody = json_decode($response->getBody(), true);
-                return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
+                if ($request->hasFile('img_merchant')){
+                    $file = $request->file('img_merchant');
+                    $fileName = $file->getClientOriginalName();
+
+                    //upload foto
+                    $client = new Client();
+                    $responseUpload = $client->post(env('API_BASE_URL') . '/merchant/upload', [
+                        'headers' => [
+                            'API_KEY' => session()->get('token'),
+                        ],
+                        'multipart' => [
+                            [
+                                'name' => 'image',
+                                'contents' => fopen($file->getRealPath(), 'r'),
+                                'filename' => $fileName,
+                            ],
+                            [
+                                'name' => 'merchant_id',
+                                'contents' => $request->merchant_id,
+                            ],
+                        ],
+                    ]);
+                    $responseBody = json_decode($responseUpload->getBody(), true);
+                    
+                    if($responseBody['data']['message'] == 'Foto merchant berhasil di unggah'){
+                        $imageNameUpdate = $responseBody['data']['image_name'];
+                        $response = $client->put(env('API_BASE_URL') . '/merchants/update/'. $request->merchant_id, [
+                            'headers' => [
+                                'API_KEY' => session()->get('token'),
+                            ],
+                            'form_params' => [
+                                'nama' => $request->nama,
+                                'deskripsi' => $request->deskripsi,
+                                'latitude' => $request->latitude,
+                                'longitude' => $request->longitude,
+                                'image' => $imageNameUpdate,
+                            ],
+                        ]);
+                        $responseBody = json_decode($response->getBody(), true);
+                        return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
+                    }else{
+                        return redirect()->route('MasterMerchant')->with('success', 'Gagal edit merchant ' . $responseBody['data']['message']);
+                    }
+
+                }else{
+                    //tanpa foto
+                    $client = new Client();
+                    $response = $client->put(env('API_BASE_URL') . '/merchants/update/'. $request->merchant_id, [
+                        'headers' => [
+                            'API_KEY' => session()->get('token'),
+                        ],
+                        'form_params' => [
+                            'nama' => $request->nama,
+                            'deskripsi' => $request->deskripsi,
+                            'latitude' => $request->latitude,
+                            'longitude' => $request->longitude,
+                        ],
+                    ]);
+                    $responseBody = json_decode($response->getBody(), true);
+                    return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
+                }
             }
             else if($request->input('proses') == 'delete'){
                 
@@ -287,9 +334,108 @@ class AdminController extends Controller
                     $file = $request->file('img_menu');
                     $fileName = $file->getClientOriginalName();
                     
-                    //add merchant
                     $client = new Client();
-                    $response = $client->post(env('API_BASE_URL') . '/menus', [
+
+                    //upload foto
+                    $response = $client->post(env('API_BASE_URL') . '/menu/upload', [
+                        'headers' => [
+                            'API_KEY' => session()->get('token'),
+                        ],
+                        'multipart' => [
+                            [
+                                'name' => 'image',
+                                'contents' => fopen($file->getRealPath(), 'r'),
+                                'filename' => $fileName,
+                            ],
+                            [
+                                'name' => 'merchant_id',
+                                'contents' => $request->merchant_id,
+                            ],
+                            [
+                                'name' => 'sku',
+                                'contents' => $request->sku,
+                            ],
+                        ],
+                    ]);
+                    
+                    $responseBody = json_decode($response->getBody(), true);
+                    
+                    if($responseBody['data']['message'] == 'Foto menu berhasil di unggah'){
+                        $response = $client->post(env('API_BASE_URL') . '/menus', [
+                            'headers' => [
+                                'API_KEY' => session()->get('token'),
+                            ],
+                            'form_params' => [
+                                'sku' => $request->sku,
+                                'nama' => $request->nama,
+                                'harga' => $request->harga,
+                                'image' => $responseBody['data']['image_name'],
+                                'merchant_id' => $request->merchant_id,
+                                'kategori' => $request->kategori,
+                            ],
+                        ]);
+                        $responseBody = json_decode($response->getBody(), true);
+                        if($responseBody['message'] == 'Menu Di tambahkan'){
+                            return redirect()->route('MasterMerchant')->with('success', 'Tambah menu sukses');
+                        }else{
+                            return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
+                        }
+                    }else{
+                        return redirect()->route('MasterMerchant')->with('success', 'Gagal tambah menu ' . $responseBody['data']['message']);
+                    }
+                }else{
+                    return redirect()->route('MasterMerchant')->with('success', 'image menu tidak valid');
+                }
+            }
+            else if($request->input('proses') == 'edit'){
+                if ($request->hasFile('img_menu')){
+                    $file = $request->file('img_menu');
+                    $fileName = $file->getClientOriginalName();
+                    
+                    //upload foto
+                    $client = new Client();
+                    $response = $client->post(env('API_BASE_URL') . '/menu/upload', [
+                        'headers' => [
+                            'API_KEY' => session()->get('token'),
+                        ],
+                        'multipart' => [
+                            [
+                                'name' => 'image',
+                                'contents' => fopen($file->getRealPath(), 'r'),
+                                'filename' => $fileName,
+                            ],
+                            [
+                                'name' => 'merchant_id',
+                                'contents' => $request->merchant_id,
+                            ],
+                            [
+                                'name' => 'sku',
+                                'contents' => $request->sku,
+                            ],
+                        ],
+                    ]);
+                    $responseBody = json_decode($response->getBody(), true);
+                    if($responseBody['data']['message'] == 'Foto menu berhasil di unggah'){
+                        $response = $client->put(env('API_BASE_URL') . '/menu/update/'.$request->menu_id, [
+                            'headers' => [
+                                'API_KEY' => session()->get('token'),
+                            ],
+                            'form_params' => [
+                                'sku' => $request->sku,
+                                'nama' => $request->nama,
+                                'harga' => $request->harga,
+                                'kategori' => $request->kategori,
+                                'image' => $responseBody['data']['image_name'],
+                            ],
+                        ]);
+                        return redirect()->route('MasterMerchant')->with('success', 'Edit menu sukses');
+                    }else{
+                        return redirect()->route('MasterMerchant')->with('success', 'Gagal tambah menu ' . $responseBody['data']['message']);
+                    }
+                }else{
+                    //tanpa foto
+                    $client = new Client();
+                    $response = $client->put(env('API_BASE_URL') . '/menu/update/'.$request->menu_id, [
                         'headers' => [
                             'API_KEY' => session()->get('token'),
                         ],
@@ -297,76 +443,13 @@ class AdminController extends Controller
                             'sku' => $request->sku,
                             'nama' => $request->nama,
                             'harga' => $request->harga,
-                            'image' => $fileName,
-                            'merchant_id' => $request->merchant_id,
                             'kategori' => $request->kategori,
                         ],
                     ]);
                     $responseBody = json_decode($response->getBody(), true);
-
-                    if($responseBody['message'] == 'Menu Di tambahkan'){
-                        $menuID = $responseBody['menu_id'];
-                        //upload foto
-                        $response = $client->post(env('API_BASE_URL') . '/menu/upload', [
-                            'headers' => [
-                                'API_KEY' => session()->get('token'),
-                            ],
-                            'multipart' => [
-                                [
-                                    'name' => 'image',
-                                    'contents' => fopen($file->getRealPath(), 'r'),
-                                    'filename' => $fileName,
-                                ],
-                                [
-                                    'name' => 'menu_id',
-                                    'contents' => $menuID,
-                                ],
-                            ],
-                        ]);
-                        $responseBody = json_decode($response->getBody(), true);
-                        
-                        if($responseBody['data']['message'] == 'Foto menu berhasil di unggah'){
-
-                            $imageNameUpdate = $responseBody['data']['image_name'];
-                            //update imagename
-                            $client = new Client();
-                            $response = $client->put(env('API_BASE_URL') . '/menu/update/'. $menuID, [
-                                'headers' => [
-                                    'API_KEY' => session()->get('token'),
-                                ],
-                                'form_params' => [
-                                    'image' => $imageNameUpdate,
-                                ],
-                            ]);
-                            
-                            return redirect()->route('MasterMerchant')->with('success', 'Tambah menu sukses');
-                        }else{
-                            return redirect()->route('MasterMerchant')->with('success', 'Gagal tambah foto menu ' . $responseBody['data']['message']);
-                        }
-                    }else{
-
-                        return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
-                    }
-                }else{
-                    return redirect()->route('MasterMerchant')->with('success', 'image menu tidak valid');
+                    
+                    return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
                 }
-            }
-            else if($request->input('proses') == 'edit'){
-
-                $client = new Client();
-                $response = $client->put(env('API_BASE_URL') . '/menu/update/'.$request->menu_id, [
-                    'headers' => [
-                        'API_KEY' => session()->get('token'),
-                    ],
-                    'form_params' => [
-                        'sku' => $request->sku,
-                        'nama' => $request->nama,
-                        'harga' => $request->harga,
-                    ],
-                ]);
-                $responseBody = json_decode($response->getBody(), true);
-                
-                return redirect()->route('MasterMerchant')->with('success', $responseBody['message']);
             }
             else if($request->input('proses') == 'delete'){
 

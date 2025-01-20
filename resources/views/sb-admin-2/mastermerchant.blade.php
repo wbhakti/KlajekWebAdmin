@@ -172,7 +172,6 @@
                         @csrf
                         <input type="hidden" name="proses" value="edit">
                         <input type="hidden" name="merchant_id" id="editRowid">
-                        <input type="hidden" name="oldimg" id="oldimg">
                         <div class="form-group">
                             <label for="editNama"><b>Nama Merchant</b></label>
                             <input type="text" name="nama" id="editNama" class="form-control" required />
@@ -191,7 +190,7 @@
                         </div>
                         <div class="form-group">
                             <label for="image"><b>Image</b></label>
-                            <input type="file" name="img_merchant" id="image" class="form-control" accept="image/*" />
+                            <input type="file" name="img_merchant" class="form-control" accept="image/*" />
                         </div>
                         <div class="form-group">
                             <label><b>Current Image</b></label>
@@ -261,7 +260,6 @@ $(document).ready(function() {
             $('#editDeskripsi').val(desc);
             $('#editLatitude').val(lat);
             $('#editLongitude').val(long);
-            $('#oldimg').val(imgMerchant);
             $('#currentimage').attr('src', imgMerchant);
 
             // Show modal

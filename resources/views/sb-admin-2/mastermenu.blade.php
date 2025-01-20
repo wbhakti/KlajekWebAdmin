@@ -69,8 +69,10 @@
                                     data-rowid="{{ $item['id'] }}"
                                     data-nama="{{ $item['nama'] }}"
                                     data-harga="{{ $item['harga'] }}"
-                                    data-kategori="{{ $item['kategori']['kategori'] }}"
-                                    data-imagemenu="{{ $item['image_url'] }}">Edit</button>
+                                    data-kategori="{{ $item['kategori']['id'] }}"
+                                    data-imagemenu="{{ $item['image_url'] }}"
+                                    data-merchantid="{{ $merchantId }}"
+                                    data-sku="{{ $item['sku'] }}">Edit</button>
                                 <!-- Form untuk tombol Delete -->
                                 <form method="POST" action="/postmenu" style="display: inline;">
                                     @csrf
@@ -153,6 +155,8 @@
                         @csrf
                         <input type="hidden" name="proses" value="edit">
                         <input type="hidden" name="menu_id" id="editRowid">
+                        <input type="hidden" name="merchant_id" id="merchantid">
+                        <input type="hidden" name="sku" id="sku">
 
                         <div class="form-group">
                             <label for="editnama"><b>Nama Menu</b></label>
@@ -164,7 +168,15 @@
                         </div>
                         <div class="form-group">
                             <label for="editkategori"><b>Kategori Menu</b></label>
-                            <input type="text" name="kategori" id="editkategori" class="form-control" required />
+                            <select class="form-control" id="editkategori" name="kategori" required>
+                                @foreach ($datakategori as $kategori)
+                                    <option value="{{ $kategori['id'] }}">{{ $kategori['nama'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="image"><b>Image</b></label>
+                            <input type="file" name="img_menu" class="form-control" accept="image/*" />
                         </div>
                         <div class="form-group">
                             <label><b>Current Image</b></label>
@@ -226,6 +238,8 @@ $(document).ready(function() {
             var harga = $(this).data('harga');
             var kategori = $(this).data('kategori');
             var img = $(this).data('imagemenu');
+            var merchantid = $(this).data('merchantid');
+            var sku = $(this).data('sku');
 
             // Set modal data
             $('#editRowid').val(rowid);
@@ -233,6 +247,8 @@ $(document).ready(function() {
             $('#editharga').val(harga);
             $('#editkategori').val(kategori);
             $('#currentImage').attr('src', img);
+            $('#merchantid').val(merchantid);
+            $('#sku').val(sku);
 
             // Show modal
             $('#editModal').modal('show');
