@@ -65,7 +65,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('dashboard/mastertransaksi') }}">
+                <a class="nav-link" href="{{ url('dashboard/reportTransaction') }}">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Transaksi</span>
                 </a>

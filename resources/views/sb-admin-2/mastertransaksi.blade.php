@@ -33,6 +33,53 @@
             <text style="color:red">{{ $error }}</text>
         </div>
         @endif
+
+        <form method="POST" action="/reportTransaction">
+            @csrf
+            <div class="mb-3">
+                <label for="date_start" class="form-label">Tanggal Awal</label>
+                <input type="date" class="form-control" id="date_start" name="date_start" value="{{ isset($date_start) ? $date_start : old('date_start') }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="date_end" class="form-label">Tanggal Akhir</label>
+                <input type="date" class="form-control" id="date_end" name="date_end" value="{{ isset($date_end) ? $date_end : old('date_end') }}" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success w-50" name="action" value="report">Tampilkan Data</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-header py-3">
+        <!-- Page Heading -->
+        @if(isset($data) && count($data['merchants']) > 0) 
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>{{ 'Jumlah Transaksi' }}</td>
+                            <td>{{ $data['count_order'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Total Order' }}</td>
+                            <td>{{ $data['order_all'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Total Ongkir' }}</td>
+                            <td>{{ $data['ongkir_all'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Total Fee' }}</td>
+                            <td>{{ $data['fee_all'] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <tr>
+                <td colspan="5" class="text-center">Data tidak ditemukan.</td>
+            </tr>
+        @endif
     </div>
 
     <div class="card-body">
@@ -40,32 +87,37 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>ID Transaksi</th>
+                        <th>ID Merchant</th>
                         <th>Nama Merchant</th>
-                        <th>Nominal Transaksi</th>
-                        <th>Ongkos Kirim</th>
-                        <th>Biaya Layanan</th>
+                        <th>Jumlah Transaksi</th>
+                        <th>Total Order</th>
+                        <th>Total Ongkir</th>
+                        <th>Total Fee</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if(isset($data) && count($data) > 0)
-                        @foreach ($data['data'] as $item)
+                    @if(isset($data) && count($data['merchants']) > 0)
+                        @foreach ($data['merchants'] as $item)
                         
                         <tr>
-                            <td>{{ $item['id_transaction'] }}</td>
-                            <td>{{ $item['merchant']['name'] }}</td>
-                            <td>{{ $item['total'] }}</td>
-                            <td>{{ $item['ongkir'] }}</td>
-                            <td>{{ $item['fee'] }}</td>
+                            <td>{{ $item['merchant_id'] }}</td>
+                            <td>{{ $item['merchant_name'] }}</td>
+                            <td>{{ $item['total_transaksi'] }}</td>
+                            <td>{{ $item['total_order'] }}</td>
+                            <td>{{ $item['total_ongkir'] }}</td>
+                            <td>{{ $item['total_fee'] }}</td>
                             <td>
-                                <form method="POST" action="/dashboard/detailtransaksi" style="display: inline;">
+                                <form method="POST" action="/dashboard/detailtransaksimerchant" style="display: inline;">
                                     @csrf
-                                    <input type="hidden" name="id" value="{{ $item['id_transaction'] }}">
-                                    <input type="hidden" name="nama_merchant" value="{{ $item['merchant']['name'] }}">
-                                    <input type="hidden" name="nama_pelanggan" value="{{ $item['customer']['full_name'] }}">
-                                    <input type="hidden" name="nomor_handphone" value="{{ $item['customer']['phone_number'] }}">
-                                    <input type="hidden" name="nominal" value="{{ $item['total'] }}">
+                                    <input type="hidden" name="date_start" value="{{ $data['date_start'] }}">
+                                    <input type="hidden" name="date_end" value="{{ $data['date_end'] }}">
+                                    <input type="hidden" name="merchant_id" value="{{ $item['merchant_id'] }}">
+                                    <input type="hidden" name="merchant_name" value="{{ $item['merchant_name'] }}">
+                                    <input type="hidden" name="total_transaksi" value="{{ $item['total_transaksi'] }}">
+                                    <input type="hidden" name="total_order" value="{{ $item['total_order'] }}">
+                                    <input type="hidden" name="total_ongkir" value="{{ $item['total_ongkir'] }}">
+                                    <input type="hidden" name="total_fee" value="{{ $item['total_fee'] }}">
                                     <button type="submit" class="btn btn-warning mb-2">Detail</button>
                                 </form>
                             </td>

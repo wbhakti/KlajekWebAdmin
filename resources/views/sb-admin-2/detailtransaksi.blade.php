@@ -27,6 +27,9 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4 custom-card-header">
     <div class="card-header py-3">
+        
+        <a href="{{ url('dashboard/detailtransaksimerchant') }}" class="btn btn-primary mb-2">Kembali</a>
+        <br>
         <!-- Page Heading -->
         <div class="table-responsive">
         <table class="table table-bordered">
@@ -54,9 +57,6 @@
             </tbody>
         </table>
         </div>
-        
-        <br>
-        <a href="{{ url('dashboard/mastertransaksi') }}" class="btn btn-primary mb-2">Kembali</a>
     </div>   
 
     <div class="card-body">
