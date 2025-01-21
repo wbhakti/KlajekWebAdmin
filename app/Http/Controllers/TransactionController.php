@@ -30,7 +30,9 @@ class TransactionController extends Controller
             $dataTransaksi = json_decode($responseTransaksi->getBody()->getContents(), true);
             
             return view('sb-admin-2/mastertransaksi', [
-                'data' => $dataTransaksi
+                'data' => $dataTransaksi,
+                'date_start' => $request->date_start,
+                'date_end' => $request->date_end,
             ]);
 
         } catch (\Exception $e) {
@@ -109,7 +111,7 @@ class TransactionController extends Controller
 
             // Hit API Merchant
             $client = new Client();
-            $responseTransaksi = $client->request('GET', env('API_BASE_URL') .'/api/order/details/'.$request->input('id'));
+            $responseTransaksi = $client->request('GET', env('API_BASE_URL') .'/order/details/'.$request->input('id'));
             $dataTransaksi = json_decode($responseTransaksi->getBody()->getContents(), true);
             
             return view('sb-admin-2/detailtransaksi', [

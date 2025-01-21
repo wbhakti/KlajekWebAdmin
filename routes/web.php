@@ -27,7 +27,7 @@ Route::post('/postmenu', 'App\Http\Controllers\AdminController@postmenu');
 
 Route::post('/dashboard/detailtransaksi', 'App\Http\Controllers\TransactionController@DetailTransaksi')->name('DetailTransaksi');
 Route::post('/dashboard/detailtransaksimerchant', 'App\Http\Controllers\TransactionController@ReportMerchantTransaction')->name('DetailTransaksiMerchant');
-Route::post('/reportTransaction', 'App\Http\Controllers\TransactionController@ReportTransaction')->name('ReportTransaction');
+Route::get('/reportTransaction', 'App\Http\Controllers\TransactionController@ReportTransaction')->name('ReportTransaction');
 Route::get("/dashboard/reportTransaction", function(){
     return view('sb-admin-2/mastertransaksi');
  });

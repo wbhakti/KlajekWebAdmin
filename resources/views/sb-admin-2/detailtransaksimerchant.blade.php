@@ -28,7 +28,8 @@
 <div class="card shadow mb-4 custom-card-header">
     <div class="card-header py-3">
         <!-- Page Heading -->
-        <a href="{{ url('reportTransaction') }}" class="btn btn-primary mb-2">Kembali</a>
+        <h1 class="h3 mb-4 text-gray-800">Detail Transaksi</h1>
+        <a href="{{ url('reportTransaction') }}?date_start={{ $date_start }}&date_end={{ $date_end }}&action=report" class="btn btn-primary mb-2">Kembali</a>
         <br>
         <div class="table-responsive">
             <table class="table table-bordered">
